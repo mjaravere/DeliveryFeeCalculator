@@ -4,15 +4,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using DeliveryFeeCalculator.Data.Repos;
 using DeliveryFeeCalculator.Models.Classes;
+using DeliveryFeeCalculator.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DeliveryFeeCalculator.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class WeatherObservationsController(WeatherObservationsRepo repo) : ControllerBase()
+    public class WeatherObservationsController(WeatherObservationsRepo repo, WeatherImportService weatherImportService) : ControllerBase()
     {
         private readonly WeatherObservationsRepo repo = repo;
+        private readonly WeatherImportService _weatherImportService = weatherImportService;
 
         [HttpGet]
         public async Task<IActionResult> GetAll(){
@@ -50,6 +52,20 @@ namespace DeliveryFeeCalculator.Controllers
         public async Task<IActionResult> DeleteWeatherObservation(int id){
             bool result = await repo.DeleteWeatherObservation(id);
             return result ? NoContent() : NotFound();
+        }
+
+        [HttpPost("import")]
+        public async Task<IActionResult> ImportWeatherData()
+        {
+            try
+            {
+                await _weatherImportService.ImportWeatherData();
+                return Ok("Ilmaandmete import õnnestus.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Ilmaandmete importimisel tekkis viga: {ex.Message}");
+            }
         }
     }
 }

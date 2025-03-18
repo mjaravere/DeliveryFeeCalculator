@@ -1,5 +1,6 @@
 using DeliveryFeeCalculator.Data;
 using DeliveryFeeCalculator.Data.Repos;
+using DeliveryFeeCalculator.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,7 +13,10 @@ builder.Services.AddControllers();
 
 builder.Services
     .AddDbContext<DataContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("Default")))
-    .AddScoped<WeatherObservationsRepo>();
+    .AddScoped<WeatherObservationsRepo>()
+    .AddHttpClient()
+    .AddScoped<WeatherImportService>()
+    .AddHostedService<WeatherImportBackgroundService>();
 
 var app = builder.Build();
 
