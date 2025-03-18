@@ -5,16 +5,16 @@ namespace DeliveryFeeCalculator.Services;
 
 public class WeatherImportBackgroundService : BackgroundService
 {
-    private readonly WeatherImportService _weatherImportService;
     private readonly IConfiguration _configuration;
     private readonly ILogger<WeatherImportBackgroundService> _logger;
+    private readonly IServiceScopeFactory _scopeFactory;
 
     public WeatherImportBackgroundService(
-        WeatherImportService weatherImportService,
+        IServiceScopeFactory scopeFactory,
         IConfiguration configuration,
         ILogger<WeatherImportBackgroundService> logger)
     {
-        _weatherImportService = weatherImportService;
+        _scopeFactory = scopeFactory;
         _configuration = configuration;
         _logger = logger;
     }
@@ -23,29 +23,32 @@ public class WeatherImportBackgroundService : BackgroundService
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            try
-            {
-                var cronExpression = _configuration["WeatherImportCron"];
-                var parsedExp = CronExpression.Parse(cronExpression);
-                var nextRun = parsedExp.GetNextOccurrence(DateTime.UtcNow);
-
-                if (nextRun.HasValue)
+            using (var scope = _scopeFactory.CreateScope()){
+                try
                 {
-                    var delay = nextRun.Value - DateTime.UtcNow;
-                    if (delay > TimeSpan.Zero)
-                    {
-                        await Task.Delay(delay, stoppingToken);
-                    }
+                    var weatherImportService = 
+                        scope.ServiceProvider.GetRequiredService<WeatherImportService>();
+                    var cronExpression = _configuration["WeatherImportCron"];
+                    var parsedExp = CronExpression.Parse(cronExpression);
+                    var nextRun = parsedExp.GetNextOccurrence(DateTime.UtcNow);
 
-                    await _weatherImportService.ImportWeatherData();
-                    _logger.LogInformation("Weather data import completed successfully at: {time}", DateTime.UtcNow);
+                    if (nextRun.HasValue)
+                    {
+                        var delay = nextRun.Value - DateTime.UtcNow;
+                        if (delay > TimeSpan.Zero)
+                        {
+                            await Task.Delay(delay, stoppingToken);
+                        }
+
+                        await weatherImportService.ImportWeatherData();
+                        _logger.LogInformation("Weather data import completed successfully at: {time}", DateTime.UtcNow);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error occurred while importing weather data");
                 }
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error occurred while importing weather data");
-            }
-
             await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
         }
     }

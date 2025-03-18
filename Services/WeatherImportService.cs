@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Xml.Linq;
 using DeliveryFeeCalculator.Data.Repos;
 using DeliveryFeeCalculator.Models.Classes;
@@ -35,8 +36,8 @@ public class WeatherImportService
                     {
                         StationName = stationName,
                         WMOCode = station.Element("wmocode")?.Value ?? "N/A",
-                        Temperature = double.Parse(station.Element("airtemperature")?.Value ?? "0"),
-                        WindSpeed = double.Parse(station.Element("windspeed")?.Value ?? "0"),
+                        Temperature = double.Parse(station.Element("airtemperature")?.Value ?? "0", CultureInfo.InvariantCulture),
+                        WindSpeed = double.Parse(station.Element("windspeed")?.Value ?? "0", CultureInfo.InvariantCulture),
                         WeatherPhenomenon = station.Element("phenomenon")?.Value ?? "N/A",
                         Timestamp = DateTime.UtcNow
                     };

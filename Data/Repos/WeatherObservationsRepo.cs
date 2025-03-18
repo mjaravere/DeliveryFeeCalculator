@@ -37,5 +37,13 @@ namespace DeliveryFeeCalculator.Data.Repos
 
             return changesCount == 1;
         }
+
+        public async Task<WeatherObservation?> GetLatestByStationName(string stationName)
+        {
+            return await context.WeatherObservations
+                .Where(w => w.StationName == stationName)
+                .OrderByDescending(w => w.Timestamp)
+                .FirstOrDefaultAsync();
+        }
     }
 }

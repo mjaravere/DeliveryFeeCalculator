@@ -16,7 +16,9 @@ builder.Services
     .AddScoped<WeatherObservationsRepo>()
     .AddHttpClient()
     .AddScoped<WeatherImportService>()
+    .AddScoped<FeeCalculator>()
     .AddHostedService<WeatherImportBackgroundService>();
+    
 
 var app = builder.Build();
 

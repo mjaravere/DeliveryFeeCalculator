@@ -47,3 +47,5 @@ C:\Users\mjara\Documents\DeliveryFeeCalculator\bin\Debug\net8.0\Microsoft.Entity
 C:\Users\mjara\Documents\DeliveryFeeCalculator\bin\Debug\net8.0\Microsoft.Extensions.Configuration.Abstractions.dll
 C:\Users\mjara\Documents\DeliveryFeeCalculator\bin\Debug\net8.0\Npgsql.dll
 C:\Users\mjara\Documents\DeliveryFeeCalculator\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:\Users\mjara\Documents\DeliveryFeeCalculator\bin\Debug\net8.0\Cronos.dll
+C:\Users\mjara\Documents\DeliveryFeeCalculator\obj\Debug\net8.0\DeliveryFeeCalculator.sourcelink.json
