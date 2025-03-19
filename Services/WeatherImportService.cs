@@ -29,7 +29,10 @@ public class WeatherImportService
             foreach (var station in stations)
             {
                 var stationName = station.Element("name")?.Value;
-                
+                if (string.IsNullOrEmpty(stationName))
+                {
+                    continue;
+                }
                 if (_targetStations.Contains(stationName))
                 {
                     var weatherObservation = new WeatherObservation
