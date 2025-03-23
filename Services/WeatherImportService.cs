@@ -17,7 +17,7 @@ public class WeatherImportService
         _repo = repo;
         _httpClient = httpClient;
     }
-
+    
     public async Task ImportWeatherData()
     {
         try
@@ -35,14 +35,14 @@ public class WeatherImportService
                 }
                 if (_targetStations.Contains(stationName))
                 {
+                    var estoniaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Europe/Tallinn");
                     var weatherObservation = new WeatherObservation
                     {
                         StationName = stationName,
                         WMOCode = station.Element("wmocode")?.Value ?? "N/A",
                         Temperature = double.Parse(station.Element("airtemperature")?.Value ?? "0", CultureInfo.InvariantCulture),
                         WindSpeed = double.Parse(station.Element("windspeed")?.Value ?? "0", CultureInfo.InvariantCulture),
-                        WeatherPhenomenon = station.Element("phenomenon")?.Value ?? "N/A",
-                        Timestamp = DateTime.UtcNow
+                        WeatherPhenomenon = station.Element("phenomenon")?.Value ?? "N/A"
                     };
 
                     await _repo.SaveObservationToDb(weatherObservation);

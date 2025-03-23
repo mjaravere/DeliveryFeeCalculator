@@ -8,6 +8,6 @@ namespace DeliveryFeeCalculator.Models.Classes
         public double Temperature { get; set; }
         public double WindSpeed { get; set; }
         public required string WeatherPhenomenon { get; set; }
-        public DateTime Timestamp { get; set; }
+        public DateTime Timestamp { get; set; } = DateTime.UtcNow.AddHours(2);
     }
 }

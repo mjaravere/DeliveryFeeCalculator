@@ -41,7 +41,7 @@ public class WeatherImportBackgroundService : BackgroundService
                         var weatherImportService = 
                             scope.ServiceProvider.GetRequiredService<WeatherImportService>();
                         await weatherImportService.ImportWeatherData();
-                        _logger.LogInformation("Weather data import completed successfully at: {time}", DateTime.UtcNow);
+                        _logger.LogInformation("Weather data import completed successfully at: {time}", DateTime.UtcNow.AddHours(2));
                     }
                 }
             }

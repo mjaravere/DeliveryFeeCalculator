@@ -15,7 +15,7 @@ namespace DeliveryFeeCalculator.Services
             _repo = repo;
             _configuration = configuration;
         }
-
+        
         public async Task<decimal> CalculateFee(City city, Vehicle vehicle)
         {
             var basePrice = GetRegionalBaseFee(city, vehicle);
